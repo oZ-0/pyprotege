@@ -10,6 +10,10 @@ class ObjectProperty(Entity):
         self.inverse_of = None
         self.domains = domains
         self.ranges = ranges
+        self.symmetric = False
+
+    def set_symmetric(self, val: bool = True):
+        self.symmetric = True
 
     def as_subproperty_of(self, name: str):
         self.subproperty_of = name
@@ -22,18 +26,22 @@ class ObjectProperty(Entity):
         if self.subproperty_of is not None:
             subproperty_xml = ET.SubElement(subelement, 'rdfs:subPropertyOf')
             subproperty_xml.set('rdf:resource', ontology_name +
-                             "#"+self.subproperty_of)
+                                "#"+self.subproperty_of)
         else:
             subproperty_xml = ET.SubElement(subelement, 'rdfs:subPropertyOf')
-            subproperty_xml.set('rdf:resource', "http://www.w3.org/2002/07/owl#topObjectProperty")
+            subproperty_xml.set(
+                'rdf:resource', "http://www.w3.org/2002/07/owl#topObjectProperty")
         if self.inverse_of is not None:
             inverse_of_xml = ET.SubElement(subelement, 'rdfs:inverseOf')
             inverse_of_xml.set('rdf:resource', ontology_name +
-                             "#"+self.inverse_of)
+                               "#"+self.inverse_of)
+        if self.symmetric:
+            type_xml = ET.SubElement(subelement, 'rdf:type')
+            type_xml.set('rdf:resource', "http://www.w3.org/2002/07/owl#SymmetricProperty")
         domain_xml = ET.SubElement(subelement, 'rdfs:domain')
         domain_xml.set('rdf:resource', ontology_name +
-                             "#"+self.domains)
+                       "#"+self.domains)
         range_of_xml = ET.SubElement(subelement, 'rdfs:range')
         range_of_xml.set('rdf:resource', ontology_name +
-                             "#"+self.ranges)
+                         "#"+self.ranges)
         return subelement

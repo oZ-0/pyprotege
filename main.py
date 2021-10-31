@@ -61,7 +61,7 @@ john_params = {
     }
 }
 john = Individual("John", john_params)
-test.add_data_property(john)
+test.add_individual(john)
 
 lea_params = {
     'isFriendOf': 'John',
@@ -72,7 +72,7 @@ lea_params = {
     }
 }
 lea = Individual("Lea", lea_params)
-test.add_data_property(lea)
+test.add_individual(lea)
 
 tom_params = {
     'type': 'Man',
@@ -85,6 +85,6 @@ tom_params = {
     }
 }
 tom = Individual("Tom", tom_params)
-test.add_data_property(tom)
+test.add_individual(tom)
 
 test.write_xml("test.xml")

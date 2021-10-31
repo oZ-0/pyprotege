@@ -19,7 +19,7 @@ class Ontology:
         self.classes.append(ontology_class)
 
     def add_individual(self, individual):
-        -1
+        self.individuals.append(individual)
 
     def start_xml(self):
         xml_document = ET.Element("rdf:RDF")
