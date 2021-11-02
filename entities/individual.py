@@ -14,8 +14,10 @@ class Individual(Entity):
         """Basic contructor for the individual. 
 
         Args:
-            name (str): The name of the property
-            params (dict): The parameters of the individual
+            name (str): The name of the property.
+            params (dict): The parameters of the individual. If params contains a datatype
+                property, it is best to indicate its type using the type attribute. You can also
+                provide the full XML line using keyref and valref attributes.
         """
         super().__init__(name)
         self.tag = "owl:NamedIndividual"
@@ -43,19 +45,13 @@ class Individual(Entity):
             else:
                 val_type = val.get('type')
                 if val_type is not None:
-                    if val_type == "int":
-                        param_xml.set(
-                            "rdf:datatype", "http://www.w3.org/2001/XMLSchema#integer")
-                    elif val_type == "float":
-                        param_xml.set(
-                            "rdf:datatype", "http://www.w3.org/2001/XMLSchema#float")
-                    elif val_type == "bool":
-                        param_xml.set(
-                            "rdf:datatype", "http://www.w3.org/2001/XMLSchema#boolean")
+                    ref_url = "http://www.w3.org/2001/XMLSchema#"
+                    if val_type in ["int", "long", "float", "double", "boolean"]:
+                        param_xml.set("rdf:datatype", ref_url+val_type)
+                        param_xml.text = val["text"]
                     else:
                         raise NotImplementedError(
-                            "The type "+val_type+" has not been implemented. Contact the maintainer.")
-                    param_xml.text = val["text"]
+                            "The type "+val_type+" has not yet been implemented...")
                 else:
                     param_xml.set(val['refkey'], val['refval'])
                     if val.get("text"):
