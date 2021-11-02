@@ -8,12 +8,29 @@ from .entity import Entity
 
 
 class Individual(Entity):
+    """Class which represents an individual. Derives from the Entity virtual class."""
+
     def __init__(self, name: str, params: dict):
+        """Basic contructor for the individual. 
+
+        Args:
+            name (str): The name of the property
+            params (dict): The parameters of the individual
+        """
         super().__init__(name)
         self.tag = "owl:NamedIndividual"
         self.params = params
 
-    def to_xml(self, subelement, ontology_name: str):
+    def to_xml(self, subelement: ET.Element, ontology_name: str) -> ET.Element:
+        """Converts the class to an xml element.
+
+        Args:
+            subelement (ET.Element): The subelement in which to convert the class.
+            ontology_name (str): The name of the Ontology.
+
+        Returns:
+            ET.SubElement: The modified subelement.
+        """
         subelement.set('rdf:about', ontology_name+"#"+self.name)
         for (key, val) in self.params.items():
             if key == "type":

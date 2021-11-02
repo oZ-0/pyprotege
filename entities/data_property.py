@@ -8,6 +8,8 @@ from .entity import Entity
 
 
 class DataProperty(Entity):
+    """Class which represents a datatype property. Derives from the Entity virtual class. """
+
     def __init__(self, name: str, domains: str, ranges: str):
         """Basic contructor for data properties.
 
@@ -34,11 +36,11 @@ class DataProperty(Entity):
         """
         self.subproperty_of = name
 
-    def to_xml(self, subelement, ontology_name: str):
-        """Convert the class to an xml element.
+    def to_xml(self, subelement: ET.Element, ontology_name: str) -> ET.Element:
+        """Converts the class to an xml element.
 
         Args:
-            subelement (ET.SubElement): The subelement in which to convert the class.
+            subelement (ET.Element): The subelement in which to convert the class.
             ontology_name (str): The name of the Ontology.
 
         Returns:
