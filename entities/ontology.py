@@ -11,6 +11,8 @@ from .individual import Individual
 
 
 class Ontology:
+    """ The main Ontology class. """
+
     def __init__(self, name: str):
         """Basic constructor for the main Ontology class.
 
@@ -76,7 +78,7 @@ class Ontology:
         ontology.set('rdf:about', self.name)
         return xml_document
 
-    def to_xml(self):
+    def to_xml(self) -> str:
         """Converts the ontology to an XML string.
 
         Returns:
@@ -104,11 +106,11 @@ class Ontology:
         xml_document_string += ET.tostring(xml_document).decode("utf-8")
         return xml_document_string
 
-    def write_xml(self, name):
+    def write_xml(self, name: str):
         """Write the ontology on the disk as an XML document.
 
         Args:
-            name ([type]): The name of the file.
+            name (str): The name of the file.
         """
         with open(name, 'w') as file:
             file.write(self.to_xml())

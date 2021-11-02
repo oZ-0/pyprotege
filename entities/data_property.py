@@ -28,7 +28,7 @@ class DataProperty(Entity):
             ValueError(
                 "ranges must be one of 'int', 'float', 'string', 'boolean'")
 
-    def add_subproperty(self, name: str):
+    def as_subproperty_of(self, name: str):
         """State that it is a subproperty of a property called name. Its existence is not checked.
 
         Args:
