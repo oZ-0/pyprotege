@@ -31,6 +31,5 @@ class DataProperty(Entity):
         domain_xml.set('rdf:resource', ontology_name +
                        "#"+self.domains)
         range_xml = ET.SubElement(subelement, 'rdfs:range')
-        range_xml.set('rdf:resource', ontology_name +
-                      "#"+self.ranges)
+        range_xml.set('rdf:resource', self.ranges)
         return subelement
