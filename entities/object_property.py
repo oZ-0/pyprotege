@@ -1,3 +1,8 @@
+"""
+File defining Object property classes.
+Designed for Protégé - IA301.
+"""
+
 import xml.etree.ElementTree as ET
 from .entity import Entity
 

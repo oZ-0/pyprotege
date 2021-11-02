@@ -55,8 +55,7 @@ test.add_data_property(age)
 john_params = {
     'type': 'Man',
     'age': {
-        "refkey": "rdf:datatype",
-        "refval": "http://www.w3.org/2001/XMLSchema#integer",
+        "type": "int",
         "text": "30"
     }
 }
@@ -64,10 +63,10 @@ john = Individual("John", john_params)
 test.add_individual(john)
 
 lea_params = {
+    "type": "Woman",
     'isFriendOf': 'John',
     'age': {
-        "refkey": "rdf:datatype",
-        "refval": "http://www.w3.org/2001/XMLSchema#integer",
+        "type": "int",
         "text": "31"
     }
 }
@@ -77,10 +76,9 @@ test.add_individual(lea)
 tom_params = {
     'type': 'Man',
     'isChildOf': 'John',
-    'isChildOf':'Lea',
+    'isChildOf': 'Lea',
     'age': {
-        "refkey": "rdf:datatype",
-        "refval": "http://www.w3.org/2001/XMLSchema#integer",
+        "type": "int",
         "text": "5"
     }
 }

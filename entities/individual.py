@@ -1,3 +1,8 @@
+"""
+File defining the Individual class which helps creating NamedIndividuals.
+Designed for Protégé - IA301.
+"""
+
 import xml.etree.ElementTree as ET
 from .entity import Entity
 
@@ -15,11 +20,27 @@ class Individual(Entity):
                 param_xml = ET.SubElement(subelement, 'rdf:'+key)
             else:
                 param_xml = ET.SubElement(subelement, key)
-            if not isinstance(val,dict):
+            if not isinstance(val, dict):
                 param_xml.set('rdf:resource', ontology_name +
-                          "#"+val)
+                              "#"+val)
             else:
-                param_xml.set(val['refkey'], val['refval'])
-                if val.get("text"):
+                val_type = val.get('type')
+                if val_type is not None:
+                    if val_type == "int":
+                        param_xml.set(
+                            "rdf:datatype", "http://www.w3.org/2001/XMLSchema#integer")
+                    elif val_type == "float":
+                        param_xml.set(
+                            "rdf:datatype", "http://www.w3.org/2001/XMLSchema#float")
+                    elif val_type == "bool":
+                        param_xml.set(
+                            "rdf:datatype", "http://www.w3.org/2001/XMLSchema#boolean")
+                    else:
+                        raise NotImplementedError(
+                            "The type "+val_type+" has not been implemented. Contact the maintainer.")
                     param_xml.text = val["text"]
+                else:
+                    param_xml.set(val['refkey'], val['refval'])
+                    if val.get("text"):
+                        param_xml.text = val["text"]
         return subelement

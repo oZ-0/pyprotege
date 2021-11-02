@@ -1,3 +1,8 @@
+"""
+File defining the virtual Entity class.
+Designed for Protégé - IA301.
+"""
+
 class Entity:
     def __init__(self, name:str):
         self.name = name
