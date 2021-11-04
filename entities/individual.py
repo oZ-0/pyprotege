@@ -46,7 +46,7 @@ class Individual(Entity):
                 val_type = val.get('type')
                 if val_type is not None:
                     ref_url = "http://www.w3.org/2001/XMLSchema#"
-                    if val_type in ["int", "long", "float", "double", "boolean", "string"]:
+                    if val_type in ["int", "long", "float", "double", "boolean","string"]:
                         param_xml.set("rdf:datatype", ref_url+val_type)
                         param_xml.text = val["text"]
                     else:
