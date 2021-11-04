@@ -22,11 +22,11 @@ class DataProperty(Entity):
         self.tag = 'owl:DatatypeProperty'
         self.subproperty_of = None
         self.domains = domains
-        if ranges in ['int', 'float', 'string', 'boolean']:
+        if ranges in ["integer", "decimal", "boolean", "string"]:
             self.ranges = 'http://www.w3.org/2001/XMLSchema#'+ranges
         else:
             ValueError(
-                "ranges must be one of 'int', 'float', 'string', 'boolean'")
+                "ranges must be one of 'integer', 'decimal', 'boolean', 'string'")
 
     def as_subproperty_of(self, name: str):
         """State that it is a subproperty of a property called name. Its existence is not checked.

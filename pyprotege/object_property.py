@@ -10,13 +10,13 @@ from .entity import Entity
 class ObjectProperty(Entity):
     """Class which represents an object property. Derives from the Entity virtual class. """
 
-    def __init__(self, name: str, domains: str, ranges: str):
+    def __init__(self, name: str, domains: str="", ranges: str=""):
         """Basic contructor for object properties.
 
         Args:
             name (str): The name of the property
-            domains (str): The classes which can hold this property
-            ranges (str): The types of possible values of the property
+            domains (str): The classes which can hold this property. Default is Empty.
+            ranges (str): The types of possible values of the property. Default is Empty.
         """
         super().__init__(name)
         self.tag = 'owl:ObjectProperty'
@@ -70,17 +70,19 @@ class ObjectProperty(Entity):
             subproperty_xml.set(
                 'rdf:resource', "http://www.w3.org/2002/07/owl#topObjectProperty")
         if self.inverse_of is not None:
-            inverse_of_xml = ET.SubElement(subelement, 'rdfs:inverseOf')
+            inverse_of_xml = ET.SubElement(subelement, 'owl:inverseOf')
             inverse_of_xml.set('rdf:resource', ontology_name +
                                "#"+self.inverse_of)
         if self.symmetric:
             type_xml = ET.SubElement(subelement, 'rdf:type')
             type_xml.set('rdf:resource',
                          "http://www.w3.org/2002/07/owl#SymmetricProperty")
-        domain_xml = ET.SubElement(subelement, 'rdfs:domain')
-        domain_xml.set('rdf:resource', ontology_name +
-                       "#"+self.domains)
-        range_of_xml = ET.SubElement(subelement, 'rdfs:range')
-        range_of_xml.set('rdf:resource', ontology_name +
-                         "#"+self.ranges)
+        if self.domains:
+            domain_xml = ET.SubElement(subelement, 'rdfs:domain')
+            domain_xml.set('rdf:resource', ontology_name +
+                        "#"+self.domains)
+        if self.ranges:
+            range_of_xml = ET.SubElement(subelement, 'rdfs:range')
+            range_of_xml.set('rdf:resource', ontology_name +
+                            "#"+self.ranges)
         return subelement

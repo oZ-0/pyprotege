@@ -1,163 +1,190 @@
-from entities.ontology import Ontology
-from entities.ontology_class import OntologyClass
-from entities.data_property import DataProperty
-from entities.object_property import ObjectProperty
-from entities.individual import Individual
+import pandas as pd
+from pyprotege.ontology import Ontology
+from pyprotege.ontology_class import OntologyClass
+from pyprotege.data_property import DataProperty
+from pyprotege.object_property import ObjectProperty
+from pyprotege.individual import Individual
 
 
 ONTOLOGY_NAME = "politique"
-test = Ontology("Politique")
+ontology = Ontology("Politique")
 
 parti = OntologyClass("Parti")
-test.add_class(parti)
+ontology.add_class(parti)
 
 groupe = OntologyClass("Groupe")
 groupe.as_subclass_of("Parti")
-test.add_class(groupe)
+ontology.add_class(groupe)
 
 votant = OntologyClass("Votant")
-test.add_class(votant)
+ontology.add_class(votant)
 
 elu = OntologyClass("Elu")
 elu.as_subclass_of("Votant")
-test.add_class(elu)
+ontology.add_class(elu)
 
 nonElu = OntologyClass("nonElu")
 nonElu.as_subclass_of("Votant")
-test.add_class(nonElu)
+ontology.add_class(nonElu)
 
 depute = OntologyClass("Depute")
 depute.as_subclass_of("Elu")
-test.add_class(depute)
+ontology.add_class(depute)
 
 senateur = OntologyClass("Senateur")
 senateur.as_subclass_of("Elu")
 senateur.as_disjoint_with("Depute")
-test.add_class(senateur)
+ontology.add_class(senateur)
 
 maire = OntologyClass("Maire")
 maire.as_subclass_of("Elu")
-test.add_class(maire)
+ontology.add_class(maire)
 
 lieuDeFonction = OntologyClass("LieuDeFonction")
-test.add_class(lieuDeFonction)
+ontology.add_class(lieuDeFonction)
 
 
-estAllie = ObjectProperty("EstAllie","Parti","Parti")
+estAllie = ObjectProperty("EstAllie", "Parti", "Parti")
 estAllie.set_symmetric()
-test.add_object_property(estAllie)
+ontology.add_object_property(estAllie)
 
-aVotePour = ObjectProperty("aVotePour","Votant","Parti")
-test.add_object_property(aVotePour)
+aVotePour = ObjectProperty("aVotePour", "Votant", "Parti")
+ontology.add_object_property(aVotePour)
 
-sympathisantDe = ObjectProperty("sympathisantDe","Votant","Parti")
-test.add_object_property(sympathisantDe)
+sympathisantDe = ObjectProperty("sympathisantDe", "Votant", "Parti")
+ontology.add_object_property(sympathisantDe)
 
-appartientAParti = ObjectProperty("appartientAParti","Elu","Parti")
-test.add_object_property(appartientAParti)
+incluantElu = ObjectProperty("incluantElu", "Parti", "Elu")
+ontology.add_object_property(incluantElu)
 
-appartientAGroupe = ObjectProperty("appartientAGroupe","Elu","Groupe")
-appartientAGroupe.as_subproperty_of("appartientAParti")
-test.add_object_property(appartientAGroupe)
+appartientAGroupe = ObjectProperty("appartientAGroupe", "Elu", "Groupe")
+appartientAGroupe.as_inverse_of("incluantElu")
+ontology.add_object_property(appartientAGroupe)
 
-travailleA = ObjectProperty("travailleA","Votant","LieuDeFonction")
-test.add_object_property(lieuDeFonction)
+travailleA = ObjectProperty("travailleA", "Votant", "LieuDeFonction")
+ontology.add_object_property(travailleA)
+
+heberge = ObjectProperty("heberge", "LieuDeFonction", "Votant")
+heberge.as_inverse_of("travailleA")
+ontology.add_object_property(heberge)
 
 
-nom = DataProperty("nom", "Votant", "string")
-test.add_data_property(nom)
+nom_votant = DataProperty("nomVotant", "Votant", "string")
+ontology.add_data_property(nom_votant)
+
+nom_groupe = DataProperty("nomGroupe", "Votant", "string")
+ontology.add_data_property(nom_groupe)
 
 prenom = DataProperty("prenom", "Votant", "string")
-test.add_data_property(prenom)
+ontology.add_data_property(prenom)
 
-age = DataProperty("age", "Votant", "int")
-test.add_data_property(age)
+age = DataProperty("age", "Votant", "integer")
+ontology.add_data_property(age)
 
 genre = DataProperty("genre", "Votant", "boolean")
-test.add_data_property(genre)
+ontology.add_data_property(genre)
 
-tauxVote = DataProperty("tauxVote", "Votant", "int")
-test.add_data_property(tauxVote)
+tauxVote = DataProperty("tauxVote", "Votant", "decimal")
+ontology.add_data_property(tauxVote)
 
-loyaute = DataProperty("loyaute", "Votant", "int")
-test.add_data_property(loyaute)
+loyaute = DataProperty("loyaute", "Votant", "decimal")
+ontology.add_data_property(loyaute)
 
-votePourMajorite =  DataProperty("votePourMajorite", "Votant", "int")
-test.add_data_property(votePourMajorite)
+votePourMajorite = DataProperty("votePourMajorite", "Votant", "decimal")
+ontology.add_data_property(votePourMajorite)
 
-voteSpecialite =  DataProperty("voteSpecialite", "Votant", "int")
-test.add_data_property(voteSpecialite)
+voteSpecialite = DataProperty("voteSpecialite", "Votant", "decimal")
+ontology.add_data_property(voteSpecialite)
 
-departement =  DataProperty("departement", "Votant", "string")
-test.add_data_property(departement)
+departement = DataProperty("departement", "Votant", "string")
+ontology.add_data_property(departement)
 
-experience =  DataProperty("experience", "Votant", "int")
-test.add_data_property(experience)
+experience = DataProperty("experience", "Votant", "integer")
+ontology.add_data_property(experience)
 
-lieu =  DataProperty("lieu", "LieuDeFonction", "string")
-test.add_data_property(lieu)
+# lieu = DataProperty("lieu", "Votant", "LieuDeFonction")
+# ontology.add_data_property(lieu)
 
 
 # ----------------------------------------------------------------
 
 
-import pandas as pd
-
 df = pd.read_csv('deputes-active.csv')
-df.replace({'M.':True,'Mme':False},inplace=True)
-df['nom'] = df['nom'].apply(lambda x: x.replace(" ",""))
+df.replace({'M.': True, 'Mme': False}, inplace=True)
+df['nom'] = df['nom'].apply(lambda x: x.lower().replace(" ", ""))
+df['prenom'] = df['prenom'].apply(lambda x: x.lower())
+df['groupe'] = df['groupe'].apply(lambda x: x.lower().replace(" ", ""))
+df['experienceDepute'] = df['experienceDepute'].apply(
+    lambda x: x.lower().replace("mois", "ans"))  # create biais but simplest fix
+df['scoreParticipationSpecialite'] = df['scoreParticipationSpecialite'].fillna(
+    0)
+df['scoreLoyaute'] = df['scoreLoyaute'].fillna(0)
 df = df.astype(str)
 
 # def remplissage(df,ontologie):
 for index, row in df.iterrows():
-    param ={ 
+    param = {
         'type': 'Depute',
-        'nom': {
-        "type": "string",
-        "text": str(row['nom'])
-    }
-    ,
+        'nomVotant': {
+            "type": "string",
+            "text": str(row['nom'])
+        },
         'prenom': {
-        "type": "string",
-        "text": row['prenom']
-    },
+            "type": "string",
+            "text": row['prenom']
+        },
         'age': {
-        "type": "int",
-        "text": row['age']
-    },
+            "type": "integer",
+            "text": str(int(row['age']))
+        },
         'genre': {
-        "type": "boolean",
-        "text": row['civ']
-    },
-        'tauxVote':{
-        "type": "int",
-        "text": row['scoreParticipation']
-    }, 
+            "type": "boolean",
+            "text": str(row['civ']).lower()
+        },
+        'tauxVote': {
+            "type": "decimal",
+            "text": str(float(row['scoreParticipation']))
+        },
         'loyaute': {
-        "type": "int",
-        "text": row['scoreLoyaute']
-    },
+            "type": "decimal",
+            "text": str(float(row['scoreLoyaute']))
+        },
         'votePourMajorite': {
-        "type": "int",
-        "text": row['scoreMajorite']
-    },
+            "type": "decimal",
+            "text": str(float(row['scoreMajorite']))
+        },
         'voteSpecialite': {
-        "type": "int",
-        "text": row['scoreParticipationSpecialite']
-    },
+            "type": "decimal",
+            "text": str(float(row['scoreParticipationSpecialite']))
+        },
         'departement': {
-        "type": "string",
-        "text": row['departementNom']
-    },
+            "type": "string",
+            "text": row['departementNom']
+        },
         'experience': {
-        "type": "int",
-        "text": row['experienceDepute'][:-3]
-    }
+            "type": "integer",
+            "text": str(int(row['experienceDepute'][:-3]))
+        },
+        "appartientAGroupe": row['groupe'],
+        "travailleA": "assembleenationale"
 
     }
-    test.add_individual(Individual(str(row['nom']), param))
+    ontology.add_individual(Individual(str(row['nom']), param))
 
-#rne-maires.csv et rne-sen.csv ne marchent pas
+groupes = df['groupe'].unique()
+for grp in groupes:
+    param = {
+        'type': 'Groupe',
+        'nomGroupe': {
+            "type": "string",
+            "text": grp
+        }
+    }
+    ontology.add_individual(Individual(grp, param))
+
+ontology.add_individual(Individual("assembleenationale", {'type': 'LieuDeFonction'}))
+
+# rne-maires.csv et rne-sen.csv ne marchent pas
 
 
-test.write_xml("main.xml")
+ontology.write_xml("main.xml")

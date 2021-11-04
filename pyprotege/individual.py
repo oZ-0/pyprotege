@@ -38,7 +38,8 @@ class Individual(Entity):
             if key == "type":
                 param_xml = ET.SubElement(subelement, 'rdf:'+key)
             else:
-                param_xml = ET.SubElement(subelement, key)
+                # if several values corresponding to one key
+                param_xml = ET.SubElement(subelement, key.split("#")[0])
             if not isinstance(val, dict):
                 param_xml.set('rdf:resource', ontology_name +
                               "#"+val)
@@ -46,8 +47,10 @@ class Individual(Entity):
                 val_type = val.get('type')
                 if val_type is not None:
                     ref_url = "http://www.w3.org/2001/XMLSchema#"
-                    if val_type in ["int", "long", "float", "double", "boolean","string"]:
+                    if val_type in ["integer", "decimal", "boolean"]:
                         param_xml.set("rdf:datatype", ref_url+val_type)
+                        param_xml.text = val["text"]
+                    elif val_type == "string":
                         param_xml.text = val["text"]
                     else:
                         raise NotImplementedError(
