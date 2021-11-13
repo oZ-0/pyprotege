@@ -13,7 +13,6 @@ parti = OntologyClass("Parti")
 ontology.add_class(parti)
 
 groupe = OntologyClass("Groupe")
-groupe.as_subclass_of("Parti")
 ontology.add_class(groupe)
 
 votant = OntologyClass("Votant")
@@ -44,7 +43,7 @@ lieuDeFonction = OntologyClass("LieuDeFonction")
 ontology.add_class(lieuDeFonction)
 
 
-estAllie = ObjectProperty("EstAllie", "Parti", "Parti")
+estAllie = ObjectProperty("estAllieA", "Parti", "Parti")
 estAllie.set_symmetric()
 ontology.add_object_property(estAllie)
 
@@ -54,7 +53,7 @@ ontology.add_object_property(aVotePour)
 sympathisantDe = ObjectProperty("sympathisantDe", "Votant", "Parti")
 ontology.add_object_property(sympathisantDe)
 
-incluantElu = ObjectProperty("incluantElu", "Parti", "Elu")
+incluantElu = ObjectProperty("incluantElu", "Groupe", "Elu")
 ontology.add_object_property(incluantElu)
 
 appartientAGroupe = ObjectProperty("appartientAGroupe", "Elu", "Groupe")
@@ -72,8 +71,11 @@ ontology.add_object_property(heberge)
 nom_votant = DataProperty("nomVotant", "Votant", "string")
 ontology.add_data_property(nom_votant)
 
-nom_groupe = DataProperty("nomGroupe", "Votant", "string")
+nom_groupe = DataProperty("nomGroupe", "Groupe", "string")
 ontology.add_data_property(nom_groupe)
+
+nom_parti = DataProperty("nomParti", "Parti", "string")
+ontology.add_data_property(nom_parti)
 
 prenom = DataProperty("prenom", "Votant", "string")
 ontology.add_data_property(prenom)
@@ -111,9 +113,8 @@ ontology.add_data_property(experience)
 
 df = pd.read_csv('deputes-active.csv')
 df.replace({'M.': True, 'Mme': False}, inplace=True)
-df['nom'] = df['nom'].apply(lambda x: x.lower().replace(" ", ""))
-df['prenom'] = df['prenom'].apply(lambda x: x.lower())
-df['groupe'] = df['groupe'].apply(lambda x: x.lower().replace(" ", ""))
+df['nom'] = df['nom'].apply(lambda x: x.replace(" ", ""))
+df['groupe'] = df['groupe'].apply(lambda x: x.replace(" ", ""))
 df['experienceDepute'] = df['experienceDepute'].apply(
     lambda x: x.lower().replace("mois", "ans"))  # create biais but simplest fix
 df['scoreParticipationSpecialite'] = df['scoreParticipationSpecialite'].fillna(
@@ -165,11 +166,12 @@ for index, row in df.iterrows():
             "type": "integer",
             "text": str(int(row['experienceDepute'][:-3]))
         },
-        "appartientAGroupe": row['groupe'],
+        "appartientAGroupe": row['groupe']+"_grp",
         "travailleA": "assembleenationale"
 
     }
-    ontology.add_individual(Individual(str(row['nom']), param))
+    ontology.add_individual(Individual(
+        row['prenom'].lower()[:3]+row['nom'], param))
 
 groupes = df['groupe'].unique()
 for grp in groupes:
@@ -180,11 +182,32 @@ for grp in groupes:
             "text": grp
         }
     }
-    ontology.add_individual(Individual(grp, param))
+    ontology.add_individual(Individual(grp+"_grp", param))
 
-ontology.add_individual(Individual("assembleenationale", {'type': 'LieuDeFonction'}))
+ontology.add_individual(Individual(
+    "assembleenationale", {'type': 'LieuDeFonction'}))
+
+lrem = {
+    'nomParti': {
+        "type": "string",
+        "text": "LaRépubliqueEnMarche"
+    }
+}
+
+ontology.add_individual(Individual("LaRépubliqueEnMarche", lrem))
+
+modem = {
+    'type': 'Parti',
+    'nomParti': {
+            "type": "string",
+            "text": "MouvementDémocrate"
+    },
+    "estAllieA": "LaRépubliqueEnMarche"
+}
+
+ontology.add_individual(Individual("MouvementDémocrate", modem))
 
 # rne-maires.csv et rne-sen.csv ne marchent pas
 
 
-ontology.write_xml("main.xml")
+ontology.write_xml("politics.xml")
